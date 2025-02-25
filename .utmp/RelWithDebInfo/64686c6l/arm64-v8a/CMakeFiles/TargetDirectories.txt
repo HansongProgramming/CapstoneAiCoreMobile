@@ -1,0 +1,5 @@
+D:/Academics/CIT7/CapstoneAiCoreMobile/My project/CapstoneAiCoreMobile/.utmp/RelWithDebInfo/64686c6l/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/Academics/CIT7/CapstoneAiCoreMobile/My project/CapstoneAiCoreMobile/.utmp/RelWithDebInfo/64686c6l/arm64-v8a/CMakeFiles/rebuild_cache.dir
+D:/Academics/CIT7/CapstoneAiCoreMobile/My project/CapstoneAiCoreMobile/.utmp/RelWithDebInfo/64686c6l/arm64-v8a/GameActivity/CMakeFiles/game.dir
+D:/Academics/CIT7/CapstoneAiCoreMobile/My project/CapstoneAiCoreMobile/.utmp/RelWithDebInfo/64686c6l/arm64-v8a/GameActivity/CMakeFiles/edit_cache.dir
+D:/Academics/CIT7/CapstoneAiCoreMobile/My project/CapstoneAiCoreMobile/.utmp/RelWithDebInfo/64686c6l/arm64-v8a/GameActivity/CMakeFiles/rebuild_cache.dir

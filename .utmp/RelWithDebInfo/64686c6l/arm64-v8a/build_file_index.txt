@@ -1,0 +1,2 @@
+D:\Academics\CIT7\CapstoneAiCoreMobile\My project\CapstoneAiCoreMobile\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+D:\Academics\CIT7\CapstoneAiCoreMobile\My project\CapstoneAiCoreMobile\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\CMakeLists.txt
