@@ -1171,7 +1171,8 @@ MonoBehaviour:
   <trackablesChanged>k__BackingField:
     m_PersistentCalls:
       m_Calls: []
-  m_PlanePrefab: {fileID: 0}
+  m_PlanePrefab: {fileID: 2482309751766461645, guid: 5fb136bcad076fb46810aee580676f49,
+    type: 3}
   m_DetectionMode: -1
 --- !u!114 &1671167203
 MonoBehaviour:
@@ -1234,7 +1235,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Button: {fileID: 828166920}
   arRaycastManager: {fileID: 1671167201}
-  point: {fileID: 8905089733715940010, guid: d8e0c8f5849c4b840899518778e279e2, type: 3}
+  spherePrefab: {fileID: 8905089733715940010, guid: d8e0c8f5849c4b840899518778e279e2,
+    type: 3}
+  linePrefab: {fileID: 6076608021155254406, guid: 5a478d43048307a40958522d49037a7a,
+    type: 3}
+  distanceTextPrefab: {fileID: 8273737945360543203, guid: 93b98a13e7ba59242bf0ded766228456,
+    type: 3}
 --- !u!1 &1672853581
 GameObject:
   m_ObjectHideFlags: 0
