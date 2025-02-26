@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{31AD00E1-62CF-8CA8-55E8-5B866DAA50A1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\experiencemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{31AD00E1-62CF-8CA8-55E8-5B866DAA50A1}|Assembly-CSharp.csproj|d:\\academics\\cit7\\capstoneaicoremobile\\my project\\capstoneaicoremobile\\assets\\scripts\\points.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{31AD00E1-62CF-8CA8-55E8-5B866DAA50A1}|Assembly-CSharp.csproj|D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\assets\\scripts\\points.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{31AD00E1-62CF-8CA8-55E8-5B866DAA50A1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\points.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -32,7 +32,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\ExperienceManager.cs",
               "ToolTip": "D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\Assets\\Scripts\\ExperienceManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\ExperienceManager.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAA5wC4AAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAAF8AAAAAAAAAAAAuwHAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-25T06:28:33.648Z",
               "EditorCaption": ""
@@ -47,8 +47,7 @@
               "RelativeToolTip": "Assets\\Scripts\\points.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T06:20:33.976Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T06:20:33.976Z"
             },
             {
               "$type": "Document",
@@ -60,8 +59,7 @@
               "RelativeToolTip": "Assets\\Scripts\\Input\\InputHandler.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-25T06:13:00.463Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-25T06:13:00.463Z"
             }
           ]
         }
