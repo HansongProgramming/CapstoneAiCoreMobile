@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
@@ -7,45 +8,38 @@ using TMPro;
 
 public class ExperienceManager : MonoBehaviour
 {
-    [SerializeField] private Button sphereButton;
-    [SerializeField] private Button squareButton;
+    [SerializeField] private Button Button;
     [SerializeField] private ARRaycastManager arRaycastManager;
     [SerializeField] private GameObject spherePrefab;
     [SerializeField] private GameObject linePrefab;
-    [SerializeField] private GameObject squarePreviewPrefab;
-    [SerializeField] private Slider rotationSlider;
-    [SerializeField] private Slider heightSlider;
-    [SerializeField] private Slider widthSlider;
     [SerializeField] private TextMeshProUGUI distanceTextPrefab;
 
-    private bool _canPlaceObject;
-    private bool _placingSquare;
-    private GameObject _objectPreview;
-    private Vector3 _detectedPosition;
-    private Quaternion _detectedQuaternion;
-    private ARTrackable _currentTrackable;
+    private bool _canPlaceSphere;
+    private GameObject _spherePreview;
+    private Vector3 _detectedPosition = new Vector3();
+    private Quaternion _detectedQuaternion = Quaternion.identity;
+    private ARTrackable _currentTrackable = null;
 
-    private List<GameObject> spawnedObjects = new List<GameObject>();
+    private List<GameObject> spawnedSpheres = new List<GameObject>();
     private List<LineRenderer> lines = new List<LineRenderer>();
     private List<TextMeshProUGUI> distanceTexts = new List<TextMeshProUGUI>();
 
     private void Start()
     {
-        sphereButton.onClick.AddListener(() => StartPlacingObject(spherePrefab, false));
-        squareButton.onClick.AddListener(() => StartPlacingObject(squarePreviewPrefab, true));
-        InputHandler.OnTap += PlaceObject;
+        InputHandler.OnTap += SpawnSphere;
+        _spherePreview = Instantiate(spherePrefab);
+        _spherePreview.SetActive(false);
     }
 
     private void OnDestroy()
     {
-        InputHandler.OnTap -= PlaceObject;
+        InputHandler.OnTap -= SpawnSphere;
     }
 
     private void Update()
     {
         GetRaycastHitTransform();
         UpdateLinesAndDistances();
-        UpdatePreviewTransform();
     }
 
     private void GetRaycastHitTransform()
@@ -56,110 +50,83 @@ public class ExperienceManager : MonoBehaviour
         {
             _detectedPosition = hits[0].pose.position;
             _detectedQuaternion = hits[0].pose.rotation;
+            _spherePreview.transform.position = _detectedPosition;
+            _spherePreview.transform.rotation = _detectedQuaternion;
+            _currentTrackable = hits[0].trackable;
         }
     }
 
-    private void StartPlacingObject(GameObject prefab, bool isSquare)
+    private void SpawnSphere()
     {
-        _placingSquare = isSquare;
-        _canPlaceObject = true;
+        if (!_canPlaceSphere) return;
 
-        if (_objectPreview != null)
-            Destroy(_objectPreview);
+        var point = Instantiate(spherePrefab);
+        point.GetComponent<points>().PlacePoint(_currentTrackable);
+        point.transform.position = _detectedPosition;
+        point.transform.rotation = _detectedQuaternion;
+        spawnedSpheres.Add(point);
 
-        _objectPreview = Instantiate(prefab);
-        _objectPreview.SetActive(true);
-        ToggleSliders(isSquare);
-    }
-
-    private void UpdatePreviewTransform()
-    {
-        if (_objectPreview == null) return;
-        _objectPreview.transform.position = _detectedPosition;
-        _objectPreview.transform.rotation = _detectedQuaternion * Quaternion.Euler(0, rotationSlider.value, 0);
-        _objectPreview.transform.localScale = new Vector3(widthSlider.value, 1, heightSlider.value);
-    }
-
-    private void PlaceObject()
-    {
-        if (!_canPlaceObject) return;
-
-        var placedObject = Instantiate(_objectPreview);
-        spawnedObjects.Add(placedObject);
-
-        if (_placingSquare)
+        if (spawnedSpheres.Count > 1)
         {
-            GenerateSquareLines(placedObject);
-        }
-        else
-        {
-            if (spawnedObjects.Count > 1)
-            {
-                DrawLineBetweenLastTwoPoints();
-            }
+            DrawLineBetweenLastTwoPoints();
         }
 
-        _canPlaceObject = false;
-        ToggleSliders(false);
-    }
-
-    private void GenerateSquareLines(GameObject square)
-    {
-        Transform[] corners = square.GetComponentsInChildren<Transform>();
-        for (int i = 1; i < corners.Length; i++)
-        {
-            if (i == corners.Length - 1) DrawLineBetweenPoints(corners[i], corners[1]);
-            else DrawLineBetweenPoints(corners[i], corners[i + 1]);
-        }
+        SetCanAddSphere(false);
     }
 
     private void DrawLineBetweenLastTwoPoints()
     {
-        if (spawnedObjects.Count < 2) return;
-        DrawLineBetweenPoints(spawnedObjects[^2].transform, spawnedObjects[^1].transform);
-    }
+        int lastIndex = spawnedSpheres.Count - 1;
+        if (lastIndex < 1) return;
 
-    private void DrawLineBetweenPoints(Transform start, Transform end)
-    {
         GameObject newLineObj = Instantiate(linePrefab);
         LineRenderer line = newLineObj.GetComponent<LineRenderer>();
         line.positionCount = 2;
-        line.SetPosition(0, start.position);
-        line.SetPosition(1, end.position);
+        line.SetPosition(0, spawnedSpheres[lastIndex - 1].transform.position);
+        line.SetPosition(1, spawnedSpheres[lastIndex].transform.position);
         lines.Add(line);
 
+        // Find a Canvas to attach the text to
         Canvas canvas = FindObjectOfType<Canvas>();
-        if (canvas != null)
+        if (canvas == null)
         {
-            TextMeshProUGUI distanceText = Instantiate(distanceTextPrefab, canvas.transform);
-            distanceTexts.Add(distanceText);
+            Debug.LogError("No Canvas found in the scene! Text will not be visible.");
+            return;
         }
+
+        // Instantiate the text inside the Canvas
+        TextMeshProUGUI distanceText = Instantiate(distanceTextPrefab, canvas.transform);
+        distanceTexts.Add(distanceText);
     }
 
     private void UpdateLinesAndDistances()
     {
         for (int i = 0; i < lines.Count; i++)
         {
-            if (i >= spawnedObjects.Count - 1 || i >= distanceTexts.Count) continue;
+            if (i >= spawnedSpheres.Count - 1 || i >= distanceTexts.Count) continue;
 
-            Vector3 start = spawnedObjects[i].transform.position;
-            Vector3 end = spawnedObjects[i + 1].transform.position;
+            Vector3 start = spawnedSpheres[i].transform.position;
+            Vector3 end = spawnedSpheres[i + 1].transform.position;
 
             lines[i].SetPosition(0, start);
             lines[i].SetPosition(1, end);
 
-            float distance = Vector3.Distance(start, end) * 39.3701f;
+            float distance = Vector3.Distance(start, end);
+            float distanceInInches = distance * 39.3701f;
+
+            // Convert world position to screen position
             Vector3 screenPosition = Camera.main.WorldToScreenPoint((start + end) / 2);
 
-            distanceTexts[i].text = $"{distance:F2} inches";
+            distanceTexts[i].text = $"{distanceInInches:F2} inches";
             distanceTexts[i].transform.position = screenPosition;
         }
     }
 
-    private void ToggleSliders(bool show)
+
+    public void SetCanAddSphere(bool canPlaceSphere)
     {
-        rotationSlider.gameObject.SetActive(show);
-        heightSlider.gameObject.SetActive(show);
-        widthSlider.gameObject.SetActive(show);
+        _canPlaceSphere = canPlaceSphere;
+        Button.gameObject.SetActive(!_canPlaceSphere);
+        _spherePreview.SetActive(_canPlaceSphere);
     }
 }
