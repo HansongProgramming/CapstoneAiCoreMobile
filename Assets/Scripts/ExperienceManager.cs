@@ -17,6 +17,8 @@ public class ExperienceManager : MonoBehaviour
     [SerializeField] private GameObject squarePrefab;
     [SerializeField] private GameObject linePrefab;
     [SerializeField] private TextMeshProUGUI distanceTextPrefab;
+    [SerializeField] private TextMeshProUGUI notice;
+    [SerializeField] private TextMeshProUGUI label;
 
     private bool _canPlaceSphere;
     private bool _canPlaceSquare;
@@ -35,6 +37,11 @@ public class ExperienceManager : MonoBehaviour
         Button.onClick.AddListener(SphereListener);
         Button2.onClick.AddListener(SquareListener);
         rotationSlider.onValueChanged.AddListener(UpdatePreviewRotation); 
+
+        rotationSlider.gameObject.SetActive(false);
+        notice.gameObject.SetActive(false);
+        label.gameObject.SetActive(false);
+
 
         _spherePreview = Instantiate(spherePrefab);
         _squarePreview = Instantiate(squarePrefab);
@@ -106,6 +113,9 @@ public class ExperienceManager : MonoBehaviour
             Vector3 surfaceNormal = hits[0].pose.up;
             Vector3 cameraForward = Camera.main.transform.forward;
 
+            _spherePreview.transform.position = _detectedPosition;
+            _spherePreview.transform.rotation = _detectedQuaternion;
+
             if (Mathf.Abs(surfaceNormal.y) > 0.7f)
             {
                 cameraForward.y = 0;
@@ -119,18 +129,17 @@ public class ExperienceManager : MonoBehaviour
                 _squarePreview.transform.rotation = _detectedQuaternion;
             }
 
-            // Apply rotation from the slider based on dropdown selection
             Vector3 previewEulerAngles = _squarePreview.transform.rotation.eulerAngles;
 
             switch (rotationDropdown.value)
             {
-                case 0: // Rotate X
+                case 0: 
                     previewEulerAngles.x += rotationSlider.value;
                     break;
-                case 1: // Rotate Y
+                case 1: 
                     previewEulerAngles.y += rotationSlider.value;
                     break;
-                case 2: // Rotate Z
+                case 2: 
                     previewEulerAngles.z += rotationSlider.value;
                     break;
             }
@@ -139,8 +148,6 @@ public class ExperienceManager : MonoBehaviour
             _squarePreview.transform.position = _detectedPosition;
         }
     }
-
-
 
     private void SpawnSphere()
     {
@@ -184,18 +191,17 @@ public class ExperienceManager : MonoBehaviour
             point.transform.rotation = _detectedQuaternion;
         }
 
-        // Apply rotation from the slider based on dropdown selection
         Vector3 spawnEulerAngles = point.transform.rotation.eulerAngles;
 
         switch (rotationDropdown.value)
         {
-            case 0: // Rotate X
+            case 0: 
                 spawnEulerAngles.x += rotationSlider.value;
                 break;
-            case 1: // Rotate Y
+            case 1: 
                 spawnEulerAngles.y += rotationSlider.value;
                 break;
-            case 2: // Rotate Z
+            case 2: 
                 spawnEulerAngles.z += rotationSlider.value;
                 break;
         }
@@ -255,6 +261,9 @@ public class ExperienceManager : MonoBehaviour
     {
         _canPlaceSphere = canPlaceSphere;
         Button.gameObject.SetActive(!_canPlaceSphere);
+        rotationDropdown.gameObject.SetActive(!_canPlaceSphere);
+        Button2.gameObject.SetActive(!_canPlaceSphere);
+        notice.gameObject.SetActive(_canPlaceSphere);
         _spherePreview.SetActive(_canPlaceSphere);
     }
 
@@ -262,6 +271,11 @@ public class ExperienceManager : MonoBehaviour
     {
         _canPlaceSquare = canPlaceSquare;
         Button.gameObject.SetActive(!_canPlaceSquare);
+        Button2.gameObject.SetActive(!_canPlaceSquare);
+        label.gameObject.SetActive(_canPlaceSquare);
+        rotationDropdown.gameObject.SetActive(!_canPlaceSquare);
+        notice.gameObject.SetActive(_canPlaceSquare);
+        rotationSlider.gameObject.SetActive(_canPlaceSquare);
         _squarePreview.SetActive(_canPlaceSquare);
     }
 }
