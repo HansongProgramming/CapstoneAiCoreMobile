@@ -9,13 +9,17 @@ using TMPro;
 public class ExperienceManager : MonoBehaviour
 {
     [SerializeField] private Button Button;
+    [SerializeField] private Button Button2;
     [SerializeField] private ARRaycastManager arRaycastManager;
     [SerializeField] private GameObject spherePrefab;
+    [SerializeField] private GameObject squarePrefab;
     [SerializeField] private GameObject linePrefab;
     [SerializeField] private TextMeshProUGUI distanceTextPrefab;
 
     private bool _canPlaceSphere;
+    private bool _canPlaceSquare;
     private GameObject _spherePreview;
+    private GameObject _squarePreview;
     private Vector3 _detectedPosition = new Vector3();
     private Quaternion _detectedQuaternion = Quaternion.identity;
     private ARTrackable _currentTrackable = null;
@@ -26,14 +30,28 @@ public class ExperienceManager : MonoBehaviour
 
     private void Start()
     {
-        InputHandler.OnTap += SpawnSphere;
+        Button.onClick.AddListener(SphereListener);
+        Button2.onClick.AddListener(SquareListener);
         _spherePreview = Instantiate(spherePrefab);
+        _squarePreview = Instantiate(squarePrefab);
+        _squarePreview.SetActive(false);
         _spherePreview.SetActive(false);
+    }
+
+    private void SphereListener()
+    {
+        InputHandler.OnTap += SpawnSphere;
+    }
+
+    private void SquareListener()
+    {
+        InputHandler.OnTap += SpawnSquare;
     }
 
     private void OnDestroy()
     {
         InputHandler.OnTap -= SpawnSphere;
+        InputHandler.OnTap -= SpawnSquare;
     }
 
     private void Update()
@@ -45,16 +63,33 @@ public class ExperienceManager : MonoBehaviour
     private void GetRaycastHitTransform()
     {
         var hits = new List<ARRaycastHit>();
-        var middlescreen = new Vector2(Screen.width / 2, Screen.height / 2);
-        if (arRaycastManager.Raycast(middlescreen, hits, TrackableType.PlaneWithinPolygon))
+        var middleScreen = new Vector2(Screen.width / 2, Screen.height / 2);
+
+        if (arRaycastManager.Raycast(middleScreen, hits, TrackableType.PlaneWithinPolygon))
         {
             _detectedPosition = hits[0].pose.position;
             _detectedQuaternion = hits[0].pose.rotation;
+            _currentTrackable = hits[0].trackable;
+
+            Vector3 cameraForward = Camera.main.transform.forward;
+            cameraForward.y = 0; 
+            cameraForward.Normalize();
+
+            Quaternion lookRotation = Quaternion.LookRotation(cameraForward);
+
             _spherePreview.transform.position = _detectedPosition;
             _spherePreview.transform.rotation = _detectedQuaternion;
-            _currentTrackable = hits[0].trackable;
+
+            _squarePreview.transform.position = _detectedPosition;
+            _squarePreview.transform.rotation = Quaternion.Euler(
+                _detectedQuaternion.eulerAngles.x,
+                lookRotation.eulerAngles.y,  
+                _detectedQuaternion.eulerAngles.z
+            );
         }
     }
+
+
 
     private void SpawnSphere()
     {
@@ -74,6 +109,31 @@ public class ExperienceManager : MonoBehaviour
         SetCanAddSphere(false);
     }
 
+    private void SpawnSquare()
+    {
+        if (!_canPlaceSquare) return;
+
+        var point = Instantiate(squarePrefab);
+        point.GetComponent<boxes>().PlaceBox(_currentTrackable);
+        point.transform.position = _detectedPosition;
+
+        Vector3 cameraForward = Camera.main.transform.forward;
+
+        cameraForward.y = 0;
+        cameraForward.Normalize();
+
+        Quaternion lookRotation = Quaternion.LookRotation(cameraForward);
+
+        point.transform.rotation = Quaternion.Euler(
+            _detectedQuaternion.eulerAngles.x,
+            lookRotation.eulerAngles.y, 
+            _detectedQuaternion.eulerAngles.z
+        );
+
+        SetCanAddSquare(false);
+    }
+
+
     private void DrawLineBetweenLastTwoPoints()
     {
         int lastIndex = spawnedSpheres.Count - 1;
@@ -86,7 +146,6 @@ public class ExperienceManager : MonoBehaviour
         line.SetPosition(1, spawnedSpheres[lastIndex].transform.position);
         lines.Add(line);
 
-        // Find a Canvas to attach the text to
         Canvas canvas = FindObjectOfType<Canvas>();
         if (canvas == null)
         {
@@ -94,7 +153,6 @@ public class ExperienceManager : MonoBehaviour
             return;
         }
 
-        // Instantiate the text inside the Canvas
         TextMeshProUGUI distanceText = Instantiate(distanceTextPrefab, canvas.transform);
         distanceTexts.Add(distanceText);
     }
@@ -114,7 +172,6 @@ public class ExperienceManager : MonoBehaviour
             float distance = Vector3.Distance(start, end);
             float distanceInInches = distance * 39.3701f;
 
-            // Convert world position to screen position
             Vector3 screenPosition = Camera.main.WorldToScreenPoint((start + end) / 2);
 
             distanceTexts[i].text = $"{distanceInInches:F2} inches";
@@ -128,5 +185,12 @@ public class ExperienceManager : MonoBehaviour
         _canPlaceSphere = canPlaceSphere;
         Button.gameObject.SetActive(!_canPlaceSphere);
         _spherePreview.SetActive(_canPlaceSphere);
+    }
+
+    public void SetCanAddSquare(bool canPlaceSquare)
+    {
+        _canPlaceSquare = canPlaceSquare;
+        Button.gameObject.SetActive(!_canPlaceSquare);
+        _squarePreview.SetActive(_canPlaceSquare);
     }
 }

@@ -2206,13 +2206,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1671167200}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 1671167206}
+        m_TargetAssemblyTypeName: ExperienceManager, Assembly-CSharp
+        m_MethodName: SetCanAddSquare
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2483,7 +2483,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Button: {fileID: 828166920}
   arRaycastManager: {fileID: 1671167201}
-  spherePrefab: {fileID: 8905089733715940010, guid: d8e0c8f5849c4b840899518778e279e2,
+  spherePrefab: {fileID: 845579813158375568, guid: ea7e5029d834fde4e90ad1a90f57bea5,
     type: 3}
   linePrefab: {fileID: 6076608021155254406, guid: 5a478d43048307a40958522d49037a7a,
     type: 3}
