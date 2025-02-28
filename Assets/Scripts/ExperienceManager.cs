@@ -10,6 +10,8 @@ public class ExperienceManager : MonoBehaviour
 {
     [SerializeField] private Button Button;
     [SerializeField] private Button Button2;
+    [SerializeField] private Slider rotationSlider;
+    [SerializeField] private TMP_Dropdown rotationDropdown;
     [SerializeField] private ARRaycastManager arRaycastManager;
     [SerializeField] private GameObject spherePrefab;
     [SerializeField] private GameObject squarePrefab;
@@ -32,11 +34,41 @@ public class ExperienceManager : MonoBehaviour
     {
         Button.onClick.AddListener(SphereListener);
         Button2.onClick.AddListener(SquareListener);
+        rotationSlider.onValueChanged.AddListener(UpdatePreviewRotation); 
+
         _spherePreview = Instantiate(spherePrefab);
         _squarePreview = Instantiate(squarePrefab);
         _squarePreview.SetActive(false);
         _spherePreview.SetActive(false);
     }
+
+    private void UpdatePreviewRotation(float value)
+    {
+        switch (rotationDropdown.value)
+        {
+            case 0: 
+                _squarePreview.transform.rotation = Quaternion.Euler(
+                    value, 
+                    _squarePreview.transform.rotation.eulerAngles.y,
+                    _squarePreview.transform.rotation.eulerAngles.z);
+                break;
+
+            case 1: 
+                _squarePreview.transform.rotation = Quaternion.Euler(
+                    _squarePreview.transform.rotation.eulerAngles.x,
+                    value, 
+                    _squarePreview.transform.rotation.eulerAngles.z);
+                break;
+
+            case 2: 
+                _squarePreview.transform.rotation = Quaternion.Euler(
+                    _squarePreview.transform.rotation.eulerAngles.x,
+                    _squarePreview.transform.rotation.eulerAngles.y,
+                    value); 
+                break;
+        }
+    }
+
 
     private void SphereListener()
     {
@@ -71,21 +103,40 @@ public class ExperienceManager : MonoBehaviour
             _detectedQuaternion = hits[0].pose.rotation;
             _currentTrackable = hits[0].trackable;
 
+            Vector3 surfaceNormal = hits[0].pose.up;
             Vector3 cameraForward = Camera.main.transform.forward;
-            cameraForward.y = 0; 
-            cameraForward.Normalize();
 
-            Quaternion lookRotation = Quaternion.LookRotation(cameraForward);
+            if (Mathf.Abs(surfaceNormal.y) > 0.7f)
+            {
+                cameraForward.y = 0;
+                cameraForward.Normalize();
 
-            _spherePreview.transform.position = _detectedPosition;
-            _spherePreview.transform.rotation = _detectedQuaternion;
+                Quaternion lookRotation = Quaternion.LookRotation(cameraForward);
+                _squarePreview.transform.rotation = lookRotation;
+            }
+            else
+            {
+                _squarePreview.transform.rotation = _detectedQuaternion;
+            }
 
+            // Apply rotation from the slider based on dropdown selection
+            Vector3 previewEulerAngles = _squarePreview.transform.rotation.eulerAngles;
+
+            switch (rotationDropdown.value)
+            {
+                case 0: // Rotate X
+                    previewEulerAngles.x += rotationSlider.value;
+                    break;
+                case 1: // Rotate Y
+                    previewEulerAngles.y += rotationSlider.value;
+                    break;
+                case 2: // Rotate Z
+                    previewEulerAngles.z += rotationSlider.value;
+                    break;
+            }
+
+            _squarePreview.transform.rotation = Quaternion.Euler(previewEulerAngles);
             _squarePreview.transform.position = _detectedPosition;
-            _squarePreview.transform.rotation = Quaternion.Euler(
-                _detectedQuaternion.eulerAngles.x,
-                lookRotation.eulerAngles.y,  
-                _detectedQuaternion.eulerAngles.z
-            );
         }
     }
 
@@ -117,19 +168,39 @@ public class ExperienceManager : MonoBehaviour
         point.GetComponent<boxes>().PlaceBox(_currentTrackable);
         point.transform.position = _detectedPosition;
 
+        Vector3 surfaceNormal = _detectedQuaternion * Vector3.up;
         Vector3 cameraForward = Camera.main.transform.forward;
 
-        cameraForward.y = 0;
-        cameraForward.Normalize();
+        if (Mathf.Abs(surfaceNormal.y) > 0.7f)
+        {
+            cameraForward.y = 0;
+            cameraForward.Normalize();
 
-        Quaternion lookRotation = Quaternion.LookRotation(cameraForward);
+            Quaternion lookRotation = Quaternion.LookRotation(cameraForward);
+            point.transform.rotation = lookRotation;
+        }
+        else
+        {
+            point.transform.rotation = _detectedQuaternion;
+        }
 
-        point.transform.rotation = Quaternion.Euler(
-            _detectedQuaternion.eulerAngles.x,
-            lookRotation.eulerAngles.y, 
-            _detectedQuaternion.eulerAngles.z
-        );
+        // Apply rotation from the slider based on dropdown selection
+        Vector3 spawnEulerAngles = point.transform.rotation.eulerAngles;
 
+        switch (rotationDropdown.value)
+        {
+            case 0: // Rotate X
+                spawnEulerAngles.x += rotationSlider.value;
+                break;
+            case 1: // Rotate Y
+                spawnEulerAngles.y += rotationSlider.value;
+                break;
+            case 2: // Rotate Z
+                spawnEulerAngles.z += rotationSlider.value;
+                break;
+        }
+
+        point.transform.rotation = Quaternion.Euler(spawnEulerAngles);
         SetCanAddSquare(false);
     }
 
