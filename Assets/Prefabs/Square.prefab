@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2854960102487386175}
   m_Layer: 0
   m_Name: Corner3
-  m_TagString: Untagged
+  m_TagString: corner3
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -414,7 +414,7 @@ GameObject:
   - component: {fileID: 1664717093304683024}
   m_Layer: 0
   m_Name: Corner4
-  m_TagString: Untagged
+  m_TagString: corner4
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -535,7 +535,7 @@ GameObject:
   - component: {fileID: 6710704480456370266}
   m_Layer: 0
   m_Name: Corner1
-  m_TagString: Untagged
+  m_TagString: corner1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -986,7 +986,7 @@ GameObject:
   - component: {fileID: 3150277955762382286}
   m_Layer: 0
   m_Name: Corner2
-  m_TagString: Untagged
+  m_TagString: corner2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

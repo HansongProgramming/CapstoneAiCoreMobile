@@ -11,6 +11,7 @@ public class ExperienceManager : MonoBehaviour
     [SerializeField] private Button Button;
     [SerializeField] private Button Button2;
     [SerializeField] private Slider rotationSlider;
+    [SerializeField] private Slider scaleSlider;
     [SerializeField] private TMP_Dropdown rotationDropdown;
     [SerializeField] private ARRaycastManager arRaycastManager;
     [SerializeField] private GameObject spherePrefab;
@@ -24,6 +25,10 @@ public class ExperienceManager : MonoBehaviour
     private bool _canPlaceSquare;
     private GameObject _spherePreview;
     private GameObject _squarePreview;
+    public GameObject corner1;
+    private GameObject corner2;
+    private GameObject corner3;
+    private GameObject corner4;
     private Vector3 _detectedPosition = new Vector3();
     private Quaternion _detectedQuaternion = Quaternion.identity;
     private ARTrackable _currentTrackable = null;
@@ -36,17 +41,30 @@ public class ExperienceManager : MonoBehaviour
     {
         Button.onClick.AddListener(SphereListener);
         Button2.onClick.AddListener(SquareListener);
-        rotationSlider.onValueChanged.AddListener(UpdatePreviewRotation); 
-
+        rotationSlider.onValueChanged.AddListener(UpdatePreviewRotation);
+        scaleSlider.onValueChanged.AddListener(AdjustYPosition);
         rotationSlider.gameObject.SetActive(false);
         notice.gameObject.SetActive(false);
         label.gameObject.SetActive(false);
-
 
         _spherePreview = Instantiate(spherePrefab);
         _squarePreview = Instantiate(squarePrefab);
         _squarePreview.SetActive(false);
         _spherePreview.SetActive(false);
+    }
+
+    public void AdjustYPosition(float newY)
+    {
+        corner1 = GameObject.FindGameObjectWithTag("corner1");
+        corner2 = GameObject.FindGameObjectWithTag("corner2");
+        corner3 = GameObject.FindGameObjectWithTag("corner3");
+        corner4 = GameObject.FindGameObjectWithTag("corner4");
+
+        if (corner1 != null)
+        {
+            Vector3 newPosition = new Vector3(corner1.transform.position.x, newY, corner1.transform.position.z);
+            corner1.transform.position = newPosition;
+        }
     }
 
     private void UpdatePreviewRotation(float value)
