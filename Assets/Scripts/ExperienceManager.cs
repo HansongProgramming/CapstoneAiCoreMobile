@@ -10,8 +10,9 @@ public class ExperienceManager : MonoBehaviour
 {
     [SerializeField] private Button Button;
     [SerializeField] private Button Button2;
+    [SerializeField] private Button ScaleUp;
+    [SerializeField] private Button ScaleDown;
     [SerializeField] private Slider rotationSlider;
-    [SerializeField] private Slider scaleSlider;
     [SerializeField] private TMP_Dropdown rotationDropdown;
     [SerializeField] private ARRaycastManager arRaycastManager;
     [SerializeField] private GameObject spherePrefab;
@@ -23,6 +24,9 @@ public class ExperienceManager : MonoBehaviour
 
     private bool _canPlaceSphere;
     private bool _canPlaceSquare;
+    private bool isHolding = false;
+    private bool scaledown = false;
+    private bool scaleup = false;
     private GameObject _spherePreview;
     private GameObject _squarePreview;
     public GameObject corner1;
@@ -42,7 +46,6 @@ public class ExperienceManager : MonoBehaviour
         Button.onClick.AddListener(SphereListener);
         Button2.onClick.AddListener(SquareListener);
         rotationSlider.onValueChanged.AddListener(UpdatePreviewRotation);
-        scaleSlider.onValueChanged.AddListener(AdjustYPosition);
         rotationSlider.gameObject.SetActive(false);
         notice.gameObject.SetActive(false);
         label.gameObject.SetActive(false);
@@ -62,8 +65,10 @@ public class ExperienceManager : MonoBehaviour
 
         if (corner1 != null)
         {
-            Vector3 newPosition = new Vector3(corner1.transform.position.x, newY, corner1.transform.position.z);
-            corner1.transform.position = newPosition;
+            Vector3 corner1pos = new Vector3(corner1.transform.position.x, corner1.transform.position.y + newY, corner1.transform.position.z);
+            Vector3 corner3pos = new Vector3(corner3.transform.position.x, corner3.transform.position.y + newY, corner3.transform.position.z);
+            corner1.transform.position = corner1pos;
+            corner3.transform.position = corner3pos;
         }
     }
 
@@ -94,7 +99,6 @@ public class ExperienceManager : MonoBehaviour
         }
     }
 
-
     private void SphereListener()
     {
         InputHandler.OnTap += SpawnSphere;
@@ -111,10 +115,31 @@ public class ExperienceManager : MonoBehaviour
         InputHandler.OnTap -= SpawnSquare;
     }
 
+    public void StartHold() => isHolding = true;
+    public void StopHold() => isHolding = false;
+    
+    public void startUp() => scaleup = true;
+    public void stopUp() => scaleup = false;
+
+    public void startDown() => scaledown = true;
+    public void stopDown() => scaledown = false;
+
     private void Update()
     {
         GetRaycastHitTransform();
         UpdateLinesAndDistances();
+
+        if (isHolding)
+        {
+            if (scaleup)
+            {
+              AdjustYPosition(0.05f * Time.deltaTime);
+            } 
+            if (scaledown)
+            {
+              AdjustYPosition(-0.05f * Time.deltaTime);
+            }
+        }
     }
 
     private void GetRaycastHitTransform()
