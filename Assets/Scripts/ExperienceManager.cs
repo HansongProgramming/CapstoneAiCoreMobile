@@ -34,6 +34,7 @@ public class ExperienceManager : MonoBehaviour
     private bool scaleright = false;
     private GameObject _spherePreview;
     private GameObject _squarePreview;
+    private GameObject convergenceLine;
     private Vector3 _detectedPosition = new Vector3();
     private Quaternion _detectedQuaternion = Quaternion.identity;
     private ARTrackable _currentTrackable = null;
@@ -54,6 +55,7 @@ public class ExperienceManager : MonoBehaviour
         ScaleDown.gameObject.SetActive(false);
         ScaleLeft.gameObject.SetActive(false);
         ScaleRight.gameObject.SetActive(false);
+        convergenceLine.SetActive(false);
         _spherePreview = Instantiate(spherePrefab);
         _squarePreview = Instantiate(squarePrefab);
         _squarePreview.SetActive(false);
@@ -320,6 +322,28 @@ public class ExperienceManager : MonoBehaviour
             _squarePreview.transform.position = _detectedPosition;
         }
     }
+
+    private float calculateImpactAngle(float length, float width)
+    {
+        float result = Mathf.Asin(length / width);
+        return result;
+    }
+
+    private void drawConvergenceLines()
+    {
+        GameObject line1 = _squarePreview.GetComponentsInChildren<Transform>()
+                   .FirstOrDefault(t => t.CompareTag("line1"))?.gameObject;
+        GameObject line2 = _squarePreview.GetComponentsInChildren<Transform>()
+                           .FirstOrDefault(t => t.CompareTag("line2"))?.gameObject;
+        convergenceLine = _squarePreview.GetComponentsInChildren<Transform>()
+                   .FirstOrDefault(t => t.CompareTag("convergence"))?.gameObject;
+        float Length = line2.transform.localScale.z;
+        float width = line1.transform.localScale.z;
+        float impactAngle = calculateImpactAngle(Length, width);
+        convergenceLine.SetActive(true);
+    }
+
+
     private void SpawnSphere()
     {
         if (!_canPlaceSphere) return;
