@@ -4579,7 +4579,7 @@ MonoBehaviour:
   arRaycastManager: {fileID: 1671167201}
   spherePrefab: {fileID: 8905089733715940010, guid: d8e0c8f5849c4b840899518778e279e2,
     type: 3}
-  squarePrefab: {fileID: 7205387932527657789, guid: bd23a767a06def849b434b9c7c6b0b2b,
+  squarePrefab: {fileID: 3383128517657657814, guid: 6e4b7a510ee27b54ba6946d7518d15af,
     type: 3}
   linePrefab: {fileID: 6076608021155254406, guid: 5a478d43048307a40958522d49037a7a,
     type: 3}
@@ -4587,7 +4587,6 @@ MonoBehaviour:
     type: 3}
   notice: {fileID: 118375787}
   label: {fileID: 842842377}
-  corner1: {fileID: 0}
 --- !u!1 &1672853581
 GameObject:
   m_ObjectHideFlags: 0

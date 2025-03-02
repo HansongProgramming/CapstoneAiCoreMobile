@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using TMPro;
+using System.Linq;
 
 public class ExperienceManager : MonoBehaviour
 {
@@ -33,10 +34,6 @@ public class ExperienceManager : MonoBehaviour
     private bool scaleright = false;
     private GameObject _spherePreview;
     private GameObject _squarePreview;
-    public GameObject corner1;
-    private GameObject corner2;
-    private GameObject corner3;
-    private GameObject corner4;
     private Vector3 _detectedPosition = new Vector3();
     private Quaternion _detectedQuaternion = Quaternion.identity;
     private ARTrackable _currentTrackable = null;
@@ -65,22 +62,39 @@ public class ExperienceManager : MonoBehaviour
 
     public void AdjustYPosition(float newY)
     {
-        corner1 = GameObject.FindGameObjectWithTag("corner1");
-        corner2 = GameObject.FindGameObjectWithTag("corner2");
-        corner3 = GameObject.FindGameObjectWithTag("corner3");
-        corner4 = GameObject.FindGameObjectWithTag("corner4");
-
-        if (corner1 != null)
+        GameObject corner1 = _squarePreview.GetComponentsInChildren<Transform>()
+                                   .FirstOrDefault(t => t.CompareTag("corner1"))?.gameObject;
+        GameObject corner2 = _squarePreview.GetComponentsInChildren<Transform>()
+                                   .FirstOrDefault(t => t.CompareTag("corner2"))?.gameObject;
+        GameObject corner3 = _squarePreview.GetComponentsInChildren<Transform>()
+                                   .FirstOrDefault(t => t.CompareTag("corner3"))?.gameObject;
+        GameObject corner4 = _squarePreview.GetComponentsInChildren<Transform>()
+                                   .FirstOrDefault(t => t.CompareTag("corner4"))?.gameObject;
+        GameObject line1 = _squarePreview.GetComponentsInChildren<Transform>()
+                                   .FirstOrDefault(t => t.CompareTag("line1"))?.gameObject;
+        GameObject line2 = _squarePreview.GetComponentsInChildren<Transform>()
+                           .FirstOrDefault(t => t.CompareTag("line2"))?.gameObject;
+        GameObject line3 = _squarePreview.GetComponentsInChildren<Transform>()
+                           .FirstOrDefault(t => t.CompareTag("line3"))?.gameObject;
+        GameObject line4 = _squarePreview.GetComponentsInChildren<Transform>()
+                           .FirstOrDefault(t => t.CompareTag("line4"))?.gameObject;
+        if (corner1 != null && line1 != null)
         {
-            Vector3 corner1pos = new Vector3(corner1.transform.position.x, corner1.transform.position.y + newY, corner1.transform.position.z);
-            Vector3 corner2pos = new Vector3(corner2.transform.position.x, corner2.transform.position.y - newY, corner2.transform.position.z);
-            Vector3 corner3pos = new Vector3(corner3.transform.position.x, corner3.transform.position.y + newY, corner3.transform.position.z);
-            Vector3 corner4pos = new Vector3(corner4.transform.position.x, corner4.transform.position.y - newY, corner4.transform.position.z);
+            Vector3 corner1pos = new Vector3(corner1.transform.position.x, corner1.transform.position.y - newY, corner1.transform.position.z);
+            Vector3 corner2pos = new Vector3(corner2.transform.position.x, corner2.transform.position.y + newY, corner2.transform.position.z);
+            Vector3 corner3pos = new Vector3(corner3.transform.position.x, corner3.transform.position.y - newY, corner3.transform.position.z);
+            Vector3 corner4pos = new Vector3(corner4.transform.position.x, corner4.transform.position.y + newY, corner4.transform.position.z);
 
             corner1.transform.position = corner1pos;
             corner2.transform.position = corner2pos;
             corner3.transform.position = corner3pos;
             corner4.transform.position = corner4pos;
+            line1.transform.position = corner1pos;
+            line2.transform.position = corner3pos;
+            line3.transform.position = corner3pos;
+            line4.transform.position = corner4pos;
+            line1.transform.localScale = new Vector3(line1.transform.localScale.x,line1.transform.localScale.y,line1.transform.localScale.z + newY * 2);
+            line3.transform.localScale = new Vector3(line3.transform.localScale.x,line3.transform.localScale.y,line3.transform.localScale.z + newY * 2);
         }
 
         if (_squarePreview.activeSelf)
@@ -93,22 +107,39 @@ public class ExperienceManager : MonoBehaviour
 
     public void AdjustXPosition(float newX)
     {
-        corner1 = GameObject.FindGameObjectWithTag("corner1");
-        corner2 = GameObject.FindGameObjectWithTag("corner2");
-        corner3 = GameObject.FindGameObjectWithTag("corner3");
-        corner4 = GameObject.FindGameObjectWithTag("corner4");
-
+        GameObject corner1 = _squarePreview.GetComponentsInChildren<Transform>()
+                                    .FirstOrDefault(t => t.CompareTag("corner1"))?.gameObject;
+        GameObject corner2 = _squarePreview.GetComponentsInChildren<Transform>()
+                                   .FirstOrDefault(t => t.CompareTag("corner2"))?.gameObject;
+        GameObject corner3 = _squarePreview.GetComponentsInChildren<Transform>()
+                                   .FirstOrDefault(t => t.CompareTag("corner3"))?.gameObject;
+        GameObject corner4 = _squarePreview.GetComponentsInChildren<Transform>()
+                                   .FirstOrDefault(t => t.CompareTag("corner4"))?.gameObject;
+        GameObject line1 = _squarePreview.GetComponentsInChildren<Transform>()
+                           .FirstOrDefault(t => t.CompareTag("line1"))?.gameObject;
+        GameObject line2 = _squarePreview.GetComponentsInChildren<Transform>()
+                           .FirstOrDefault(t => t.CompareTag("line2"))?.gameObject;
+        GameObject line3 = _squarePreview.GetComponentsInChildren<Transform>()
+                           .FirstOrDefault(t => t.CompareTag("line3"))?.gameObject;
+        GameObject line4 = _squarePreview.GetComponentsInChildren<Transform>()
+                           .FirstOrDefault(t => t.CompareTag("line4"))?.gameObject;
         if (corner1 != null)
         {
-            Vector3 corner1pos = new Vector3(corner1.transform.position.x, corner1.transform.position.y , corner1.transform.position.z + newX);
-            Vector3 corner2pos = new Vector3(corner2.transform.position.x, corner2.transform.position.y , corner2.transform.position.z + newX);
-            Vector3 corner3pos = new Vector3(corner3.transform.position.x, corner3.transform.position.y , corner3.transform.position.z - newX);
-            Vector3 corner4pos = new Vector3(corner4.transform.position.x, corner4.transform.position.y , corner4.transform.position.z - newX);
+            Vector3 corner1pos = new Vector3(corner1.transform.position.x, corner1.transform.position.y , corner1.transform.position.z - newX);
+            Vector3 corner2pos = new Vector3(corner2.transform.position.x, corner2.transform.position.y , corner2.transform.position.z - newX);
+            Vector3 corner3pos = new Vector3(corner3.transform.position.x, corner3.transform.position.y , corner3.transform.position.z + newX);
+            Vector3 corner4pos = new Vector3(corner4.transform.position.x, corner4.transform.position.y , corner4.transform.position.z + newX);
 
             corner1.transform.position = corner1pos;
             corner2.transform.position = corner2pos;
             corner3.transform.position = corner3pos;
             corner4.transform.position = corner4pos;
+            line1.transform.position = corner1pos;
+            line2.transform.position = corner3pos;
+            line3.transform.position = corner3pos;
+            line4.transform.position = corner4pos;
+            line2.transform.localScale = new Vector3(line2.transform.localScale.x, line2.transform.localScale.y, line2.transform.localScale.z + newX *2);
+            line4.transform.localScale = new Vector3(line4.transform.localScale.x, line4.transform.localScale.y, line4.transform.localScale.z + newX *2);
         }
 
         if (_squarePreview.activeSelf)
@@ -156,7 +187,6 @@ public class ExperienceManager : MonoBehaviour
         InputHandler.OnTap -= SpawnSquare; 
         InputHandler.OnTap += SpawnSquare;
     }
-
     private void DisableSquarePlacement()
     {
         InputHandler.OnTap -= SpawnSquare;
@@ -166,7 +196,6 @@ public class ExperienceManager : MonoBehaviour
         InputHandler.OnTap -= SpawnSphere;
         InputHandler.OnTap -= SpawnSquare;
     }
-
     public void StartHold()
     {
         isHolding = true;
@@ -177,7 +206,6 @@ public class ExperienceManager : MonoBehaviour
         isHolding = false;
         InputHandler.OnTap += SpawnSquare; 
     }
-
     public void startUp()
     {
         scaleup = true;
@@ -188,19 +216,16 @@ public class ExperienceManager : MonoBehaviour
         scaleup = false;
         InputHandler.OnTap += SpawnSquare;
     }
-
     public void startDown()
     {
         scaledown = true;
         DisableSquarePlacement();
     }
-
     public void stopDown()
     {
         scaledown = false;
         InputHandler.OnTap += SpawnSquare;
     }
-
     public void startLeft()
     {
         scaleleft = true;
@@ -211,7 +236,6 @@ public class ExperienceManager : MonoBehaviour
         scaleleft = false;
         InputHandler.OnTap += SpawnSquare;
     }
-
     public void startRight()
     {
         scaleright = true;
@@ -231,23 +255,22 @@ public class ExperienceManager : MonoBehaviour
         {
             if (scaleup)
             {
-              AdjustYPosition(-0.05f * Time.deltaTime);
+              AdjustYPosition(0.05f * Time.deltaTime);
             } 
             if (scaledown)
             {
-              AdjustYPosition(0.05f * Time.deltaTime);
+              AdjustYPosition(-0.05f * Time.deltaTime);
             }
             if (scaleleft)
             {
-                AdjustXPosition(-0.05f * Time.deltaTime);
+                AdjustXPosition(0.05f * Time.deltaTime);
             }
             if (scaleright)
             {
-                AdjustXPosition(0.05f * Time.deltaTime);
+                AdjustXPosition(-0.05f * Time.deltaTime);
             }
         }
     }
-
     private void GetRaycastHitTransform()
     {
         var hits = new List<ARRaycastHit>();
@@ -297,7 +320,6 @@ public class ExperienceManager : MonoBehaviour
             _squarePreview.transform.position = _detectedPosition;
         }
     }
-
     private void SpawnSphere()
     {
         if (!_canPlaceSphere) return;
@@ -315,12 +337,11 @@ public class ExperienceManager : MonoBehaviour
 
         SetCanAddSphere(false);
     }
-
     private void SpawnSquare()
     {
         if (!_canPlaceSquare) return;
 
-        var point = Instantiate(squarePrefab);
+        var point = Instantiate(_squarePreview);
         point.GetComponent<boxes>().PlaceBox(_currentTrackable);
         point.transform.position = _detectedPosition;
 
@@ -358,7 +379,6 @@ public class ExperienceManager : MonoBehaviour
         point.transform.rotation = Quaternion.Euler(spawnEulerAngles);
         SetCanAddSquare(false);
     }
-
     private void DrawLineBetweenLastTwoPoints()
     {
         int lastIndex = spawnedSpheres.Count - 1;
@@ -381,7 +401,6 @@ public class ExperienceManager : MonoBehaviour
         TextMeshProUGUI distanceText = Instantiate(distanceTextPrefab, canvas.transform);
         distanceTexts.Add(distanceText);
     }
-
     private void UpdateLinesAndDistances()
     {
         for (int i = 0; i < lines.Count; i++)
@@ -403,8 +422,6 @@ public class ExperienceManager : MonoBehaviour
             distanceTexts[i].transform.position = screenPosition;
         }
     }
-
-
     public void SetCanAddSphere(bool canPlaceSphere)
     {
         _canPlaceSphere = canPlaceSphere;
@@ -414,7 +431,6 @@ public class ExperienceManager : MonoBehaviour
         notice.gameObject.SetActive(_canPlaceSphere);
         _spherePreview.SetActive(_canPlaceSphere);
     }
-
     public void SetCanAddSquare(bool canPlaceSquare)
     {
         _canPlaceSquare = canPlaceSquare;
