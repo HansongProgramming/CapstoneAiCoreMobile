@@ -12,6 +12,8 @@ public class ExperienceManager : MonoBehaviour
     [SerializeField] private Button Button2;
     [SerializeField] private Button ScaleUp;
     [SerializeField] private Button ScaleDown;
+    [SerializeField] private Button ScaleLeft;
+    [SerializeField] private Button ScaleRight;
     [SerializeField] private Slider rotationSlider;
     [SerializeField] private TMP_Dropdown rotationDropdown;
     [SerializeField] private ARRaycastManager arRaycastManager;
@@ -27,6 +29,8 @@ public class ExperienceManager : MonoBehaviour
     private bool isHolding = false;
     private bool scaledown = false;
     private bool scaleup = false;
+    private bool scaleleft = false;
+    private bool scaleright = false;
     private GameObject _spherePreview;
     private GameObject _squarePreview;
     public GameObject corner1;
@@ -49,7 +53,10 @@ public class ExperienceManager : MonoBehaviour
         rotationSlider.gameObject.SetActive(false);
         notice.gameObject.SetActive(false);
         label.gameObject.SetActive(false);
-
+        ScaleUp.gameObject.SetActive(false);
+        ScaleDown.gameObject.SetActive(false);
+        ScaleLeft.gameObject.SetActive(false);
+        ScaleRight.gameObject.SetActive(false);
         _spherePreview = Instantiate(spherePrefab);
         _squarePreview = Instantiate(squarePrefab);
         _squarePreview.SetActive(false);
@@ -66,9 +73,49 @@ public class ExperienceManager : MonoBehaviour
         if (corner1 != null)
         {
             Vector3 corner1pos = new Vector3(corner1.transform.position.x, corner1.transform.position.y + newY, corner1.transform.position.z);
+            Vector3 corner2pos = new Vector3(corner2.transform.position.x, corner2.transform.position.y - newY, corner2.transform.position.z);
             Vector3 corner3pos = new Vector3(corner3.transform.position.x, corner3.transform.position.y + newY, corner3.transform.position.z);
+            Vector3 corner4pos = new Vector3(corner4.transform.position.x, corner4.transform.position.y - newY, corner4.transform.position.z);
+
             corner1.transform.position = corner1pos;
+            corner2.transform.position = corner2pos;
             corner3.transform.position = corner3pos;
+            corner4.transform.position = corner4pos;
+        }
+
+        if (_squarePreview.activeSelf)
+        {
+            Vector3 previewPos = _squarePreview.transform.position;
+            previewPos.y += newY;
+            _squarePreview.transform.position = previewPos;
+        }
+    }
+
+    public void AdjustXPosition(float newX)
+    {
+        corner1 = GameObject.FindGameObjectWithTag("corner1");
+        corner2 = GameObject.FindGameObjectWithTag("corner2");
+        corner3 = GameObject.FindGameObjectWithTag("corner3");
+        corner4 = GameObject.FindGameObjectWithTag("corner4");
+
+        if (corner1 != null)
+        {
+            Vector3 corner1pos = new Vector3(corner1.transform.position.x, corner1.transform.position.y , corner1.transform.position.z + newX);
+            Vector3 corner2pos = new Vector3(corner2.transform.position.x, corner2.transform.position.y , corner2.transform.position.z + newX);
+            Vector3 corner3pos = new Vector3(corner3.transform.position.x, corner3.transform.position.y , corner3.transform.position.z - newX);
+            Vector3 corner4pos = new Vector3(corner4.transform.position.x, corner4.transform.position.y , corner4.transform.position.z - newX);
+
+            corner1.transform.position = corner1pos;
+            corner2.transform.position = corner2pos;
+            corner3.transform.position = corner3pos;
+            corner4.transform.position = corner4pos;
+        }
+
+        if (_squarePreview.activeSelf)
+        {
+            Vector3 previewPos = _squarePreview.transform.position;
+            previewPos.z += newX;
+            _squarePreview.transform.position = previewPos;
         }
     }
 
@@ -106,24 +153,75 @@ public class ExperienceManager : MonoBehaviour
 
     private void SquareListener()
     {
+        InputHandler.OnTap -= SpawnSquare; 
         InputHandler.OnTap += SpawnSquare;
     }
 
+    private void DisableSquarePlacement()
+    {
+        InputHandler.OnTap -= SpawnSquare;
+    }
     private void OnDestroy()
     {
         InputHandler.OnTap -= SpawnSphere;
         InputHandler.OnTap -= SpawnSquare;
     }
 
-    public void StartHold() => isHolding = true;
-    public void StopHold() => isHolding = false;
-    
-    public void startUp() => scaleup = true;
-    public void stopUp() => scaleup = false;
+    public void StartHold()
+    {
+        isHolding = true;
+        DisableSquarePlacement();
+    }
+    public void StopHold()
+    {
+        isHolding = false;
+        InputHandler.OnTap += SpawnSquare; 
+    }
 
-    public void startDown() => scaledown = true;
-    public void stopDown() => scaledown = false;
+    public void startUp()
+    {
+        scaleup = true;
+        DisableSquarePlacement();
+    }
+    public void stopUp()
+    {
+        scaleup = false;
+        InputHandler.OnTap += SpawnSquare;
+    }
 
+    public void startDown()
+    {
+        scaledown = true;
+        DisableSquarePlacement();
+    }
+
+    public void stopDown()
+    {
+        scaledown = false;
+        InputHandler.OnTap += SpawnSquare;
+    }
+
+    public void startLeft()
+    {
+        scaleleft = true;
+        DisableSquarePlacement();
+    }
+    public void stopLeft()
+    {
+        scaleleft = false;
+        InputHandler.OnTap += SpawnSquare;
+    }
+
+    public void startRight()
+    {
+        scaleright = true;
+        DisableSquarePlacement();
+    }
+    public void stopRight()
+    {
+        scaleright = false;
+        InputHandler.OnTap += SpawnSquare;
+    }
     private void Update()
     {
         GetRaycastHitTransform();
@@ -133,11 +231,19 @@ public class ExperienceManager : MonoBehaviour
         {
             if (scaleup)
             {
-              AdjustYPosition(0.05f * Time.deltaTime);
+              AdjustYPosition(-0.05f * Time.deltaTime);
             } 
             if (scaledown)
             {
-              AdjustYPosition(-0.05f * Time.deltaTime);
+              AdjustYPosition(0.05f * Time.deltaTime);
+            }
+            if (scaleleft)
+            {
+                AdjustXPosition(-0.05f * Time.deltaTime);
+            }
+            if (scaleright)
+            {
+                AdjustXPosition(0.05f * Time.deltaTime);
             }
         }
     }
@@ -253,7 +359,6 @@ public class ExperienceManager : MonoBehaviour
         SetCanAddSquare(false);
     }
 
-
     private void DrawLineBetweenLastTwoPoints()
     {
         int lastIndex = spawnedSpheres.Count - 1;
@@ -315,6 +420,10 @@ public class ExperienceManager : MonoBehaviour
         _canPlaceSquare = canPlaceSquare;
         Button.gameObject.SetActive(!_canPlaceSquare);
         Button2.gameObject.SetActive(!_canPlaceSquare);
+        ScaleUp.gameObject.SetActive(_canPlaceSquare);
+        ScaleDown.gameObject.SetActive(_canPlaceSquare);
+        ScaleLeft.gameObject.SetActive(_canPlaceSquare);
+        ScaleRight.gameObject.SetActive(_canPlaceSquare);
         label.gameObject.SetActive(_canPlaceSquare);
         rotationDropdown.gameObject.SetActive(!_canPlaceSquare);
         notice.gameObject.SetActive(_canPlaceSquare);
