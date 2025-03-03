@@ -353,7 +353,8 @@ public class ExperienceManager : MonoBehaviour
         float width = line1.transform.localScale.z;
         float impactAngle = calculateImpactAngle(Length, width);
         Debug.Log(impactAngle);
-        convergenceLine.transform.rotation = Quaternion.Euler(0 , 0 + impactAngle, 0);
+        Quaternion currentRotation = convergenceLine.transform.rotation;
+        convergenceLine.transform.localRotation = Quaternion.Euler(impactAngle, 0, 0);
     }
     private void SpawnSphere()
     {
