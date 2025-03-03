@@ -6,6 +6,7 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using TMPro;
 using System.Linq;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class ExperienceManager : MonoBehaviour
 {
@@ -55,7 +56,6 @@ public class ExperienceManager : MonoBehaviour
         ScaleDown.gameObject.SetActive(false);
         ScaleLeft.gameObject.SetActive(false);
         ScaleRight.gameObject.SetActive(false);
-        convergenceLine.SetActive(false);
         _spherePreview = Instantiate(spherePrefab);
         _squarePreview = Instantiate(squarePrefab);
         _squarePreview.SetActive(false);
@@ -104,6 +104,7 @@ public class ExperienceManager : MonoBehaviour
             Vector3 previewPos = _squarePreview.transform.position;
             previewPos.y += newY;
             _squarePreview.transform.position = previewPos;
+            rotateConvergenceLines();
         }
     }
 
@@ -149,6 +150,7 @@ public class ExperienceManager : MonoBehaviour
             Vector3 previewPos = _squarePreview.transform.position;
             previewPos.z += newX;
             _squarePreview.transform.position = previewPos;
+            rotateConvergenceLines();
         }
     }
 
@@ -325,11 +327,21 @@ public class ExperienceManager : MonoBehaviour
 
     private float calculateImpactAngle(float length, float width)
     {
-        float result = Mathf.Asin(length / width);
-        return result;
+        if (width == 0)
+        {
+            Debug.LogError("Width is zero! Preventing division by zero.");
+            return 0; // Or some default value
+        }
+
+        float ratio = length / width;
+        ratio = Mathf.Clamp(ratio, -1f, 1f); // Ensure the value is within valid range
+
+        float result = Mathf.Asin(ratio);
+        return result * Mathf.Rad2Deg; // Convert from radians to degrees
     }
 
-    private void drawConvergenceLines()
+
+    private void rotateConvergenceLines()
     {
         GameObject line1 = _squarePreview.GetComponentsInChildren<Transform>()
                    .FirstOrDefault(t => t.CompareTag("line1"))?.gameObject;
@@ -340,10 +352,9 @@ public class ExperienceManager : MonoBehaviour
         float Length = line2.transform.localScale.z;
         float width = line1.transform.localScale.z;
         float impactAngle = calculateImpactAngle(Length, width);
-        convergenceLine.SetActive(true);
+        Debug.Log(impactAngle);
+        convergenceLine.transform.rotation = Quaternion.Euler(0 , 0 + impactAngle, 0);
     }
-
-
     private void SpawnSphere()
     {
         if (!_canPlaceSphere) return;
