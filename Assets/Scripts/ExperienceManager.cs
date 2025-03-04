@@ -7,6 +7,7 @@ using UnityEngine.XR.ARSubsystems;
 using TMPro;
 using System.Linq;
 using static UnityEngine.UI.GridLayoutGroup;
+using UnityEngine.InputSystem;
 
 public class ExperienceManager : MonoBehaviour
 {
@@ -60,98 +61,8 @@ public class ExperienceManager : MonoBehaviour
         _squarePreview = Instantiate(squarePrefab);
         _squarePreview.SetActive(false);
         _spherePreview.SetActive(false);
-    }
 
-    public void AdjustYPosition(float newY)
-    {
-        GameObject corner1 = _squarePreview.GetComponentsInChildren<Transform>()
-                                   .FirstOrDefault(t => t.CompareTag("corner1"))?.gameObject;
-        GameObject corner2 = _squarePreview.GetComponentsInChildren<Transform>()
-                                   .FirstOrDefault(t => t.CompareTag("corner2"))?.gameObject;
-        GameObject corner3 = _squarePreview.GetComponentsInChildren<Transform>()
-                                   .FirstOrDefault(t => t.CompareTag("corner3"))?.gameObject;
-        GameObject corner4 = _squarePreview.GetComponentsInChildren<Transform>()
-                                   .FirstOrDefault(t => t.CompareTag("corner4"))?.gameObject;
-        GameObject line1 = _squarePreview.GetComponentsInChildren<Transform>()
-                                   .FirstOrDefault(t => t.CompareTag("line1"))?.gameObject;
-        GameObject line2 = _squarePreview.GetComponentsInChildren<Transform>()
-                           .FirstOrDefault(t => t.CompareTag("line2"))?.gameObject;
-        GameObject line3 = _squarePreview.GetComponentsInChildren<Transform>()
-                           .FirstOrDefault(t => t.CompareTag("line3"))?.gameObject;
-        GameObject line4 = _squarePreview.GetComponentsInChildren<Transform>()
-                           .FirstOrDefault(t => t.CompareTag("line4"))?.gameObject;
-        if (corner1 != null && line1 != null)
-        {
-            Vector3 corner1pos = new Vector3(corner1.transform.position.x, corner1.transform.position.y - newY, corner1.transform.position.z);
-            Vector3 corner2pos = new Vector3(corner2.transform.position.x, corner2.transform.position.y + newY, corner2.transform.position.z);
-            Vector3 corner3pos = new Vector3(corner3.transform.position.x, corner3.transform.position.y - newY, corner3.transform.position.z);
-            Vector3 corner4pos = new Vector3(corner4.transform.position.x, corner4.transform.position.y + newY, corner4.transform.position.z);
 
-            corner1.transform.position = corner1pos;
-            corner2.transform.position = corner2pos;
-            corner3.transform.position = corner3pos;
-            corner4.transform.position = corner4pos;
-            line1.transform.position = corner1pos;
-            line2.transform.position = corner3pos;
-            line3.transform.position = corner3pos;
-            line4.transform.position = corner4pos;
-            line1.transform.localScale = new Vector3(line1.transform.localScale.x,line1.transform.localScale.y,line1.transform.localScale.z + newY * 2);
-            line3.transform.localScale = new Vector3(line3.transform.localScale.x,line3.transform.localScale.y,line3.transform.localScale.z + newY * 2);
-        }
-
-        if (_squarePreview.activeSelf)
-        {
-            Vector3 previewPos = _squarePreview.transform.position;
-            previewPos.y += newY;
-            _squarePreview.transform.position = previewPos;
-            rotateConvergenceLines();
-        }
-    }
-
-    public void AdjustXPosition(float newX)
-    {
-        GameObject corner1 = _squarePreview.GetComponentsInChildren<Transform>()
-                                    .FirstOrDefault(t => t.CompareTag("corner1"))?.gameObject;
-        GameObject corner2 = _squarePreview.GetComponentsInChildren<Transform>()
-                                   .FirstOrDefault(t => t.CompareTag("corner2"))?.gameObject;
-        GameObject corner3 = _squarePreview.GetComponentsInChildren<Transform>()
-                                   .FirstOrDefault(t => t.CompareTag("corner3"))?.gameObject;
-        GameObject corner4 = _squarePreview.GetComponentsInChildren<Transform>()
-                                   .FirstOrDefault(t => t.CompareTag("corner4"))?.gameObject;
-        GameObject line1 = _squarePreview.GetComponentsInChildren<Transform>()
-                           .FirstOrDefault(t => t.CompareTag("line1"))?.gameObject;
-        GameObject line2 = _squarePreview.GetComponentsInChildren<Transform>()
-                           .FirstOrDefault(t => t.CompareTag("line2"))?.gameObject;
-        GameObject line3 = _squarePreview.GetComponentsInChildren<Transform>()
-                           .FirstOrDefault(t => t.CompareTag("line3"))?.gameObject;
-        GameObject line4 = _squarePreview.GetComponentsInChildren<Transform>()
-                           .FirstOrDefault(t => t.CompareTag("line4"))?.gameObject;
-        if (corner1 != null)
-        {
-            Vector3 corner1pos = new Vector3(corner1.transform.position.x, corner1.transform.position.y , corner1.transform.position.z - newX);
-            Vector3 corner2pos = new Vector3(corner2.transform.position.x, corner2.transform.position.y , corner2.transform.position.z - newX);
-            Vector3 corner3pos = new Vector3(corner3.transform.position.x, corner3.transform.position.y , corner3.transform.position.z + newX);
-            Vector3 corner4pos = new Vector3(corner4.transform.position.x, corner4.transform.position.y , corner4.transform.position.z + newX);
-
-            corner1.transform.position = corner1pos;
-            corner2.transform.position = corner2pos;
-            corner3.transform.position = corner3pos;
-            corner4.transform.position = corner4pos;
-            line1.transform.position = corner1pos;
-            line2.transform.position = corner3pos;
-            line3.transform.position = corner3pos;
-            line4.transform.position = corner4pos;
-            line2.transform.localScale = new Vector3(line2.transform.localScale.x, line2.transform.localScale.y, line2.transform.localScale.z + newX *2);
-            line4.transform.localScale = new Vector3(line4.transform.localScale.x, line4.transform.localScale.y, line4.transform.localScale.z + newX *2);
-        }
-
-        if (_squarePreview.activeSelf)
-        {
-            Vector3 previewPos = _squarePreview.transform.position;
-            previewPos.z += newX;
-            _squarePreview.transform.position = previewPos;
-            rotateConvergenceLines();
-        }
     }
 
     private void UpdatePreviewRotation(float value)
@@ -259,19 +170,19 @@ public class ExperienceManager : MonoBehaviour
         {
             if (scaleup)
             {
-              AdjustYPosition(0.05f * Time.deltaTime);
-            } 
+              ScaleSquare(0,0.05f * Time.deltaTime);
+            }
             if (scaledown)
             {
-              AdjustYPosition(-0.05f * Time.deltaTime);
+              ScaleSquare(0, -0.05f * Time.deltaTime);
             }
             if (scaleleft)
             {
-                AdjustXPosition(0.05f * Time.deltaTime);
+              ScaleSquare(0.05f * Time.deltaTime,0);
             }
             if (scaleright)
             {
-                AdjustXPosition(-0.05f * Time.deltaTime);
+              ScaleSquare(-0.05f * Time.deltaTime,0);
             }
         }
     }
@@ -330,32 +241,46 @@ public class ExperienceManager : MonoBehaviour
         if (width == 0)
         {
             Debug.LogError("Width is zero! Preventing division by zero.");
-            return 0; // Or some default value
+            return 0; 
         }
 
         float ratio = length / width;
-        ratio = Mathf.Clamp(ratio, -1f, 1f); // Ensure the value is within valid range
+        ratio = Mathf.Clamp(ratio, -1f, 1f); 
 
         float result = Mathf.Asin(ratio);
-        return result * Mathf.Rad2Deg; // Convert from radians to degrees
+        return result * Mathf.Rad2Deg; 
     }
-
-
     private void rotateConvergenceLines()
     {
-        GameObject line1 = _squarePreview.GetComponentsInChildren<Transform>()
-                   .FirstOrDefault(t => t.CompareTag("line1"))?.gameObject;
-        GameObject line2 = _squarePreview.GetComponentsInChildren<Transform>()
-                           .FirstOrDefault(t => t.CompareTag("line2"))?.gameObject;
         convergenceLine = _squarePreview.GetComponentsInChildren<Transform>()
-                   .FirstOrDefault(t => t.CompareTag("convergence"))?.gameObject;
-        float Length = line2.transform.localScale.z;
-        float width = line1.transform.localScale.z;
-        float impactAngle = calculateImpactAngle(Length, width);
-        Debug.Log(impactAngle);
+                       .FirstOrDefault(t => t.CompareTag("convergence"))?.gameObject;
+
+        if (convergenceLine == null)
+        {
+            Debug.LogWarning("Convergence line not found.");
+            return;
+        }
+
+        float height = _squarePreview.transform.localScale.z;  
+        float width = _squarePreview.transform.localScale.x;   
+
+        float impactAngle = calculateImpactAngle(height, width);
+        Debug.Log($"Impact Angle: {impactAngle}");
+
         Quaternion currentRotation = convergenceLine.transform.rotation;
-        convergenceLine.transform.localRotation = Quaternion.Euler(impactAngle, 0, 0);
+        convergenceLine.transform.localRotation = Quaternion.Euler(impactAngle*-1, 0, 0);
     }
+
+
+    void ScaleSquare(float scaleX, float scaleY)
+    {
+        Vector3 newScale = _squarePreview.transform.localScale;
+        newScale.x += scaleX;
+        newScale.z += scaleY;
+        _squarePreview.transform.localScale = newScale;
+        rotateConvergenceLines();
+    }
+
     private void SpawnSphere()
     {
         if (!_canPlaceSphere) return;
