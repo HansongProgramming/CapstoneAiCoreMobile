@@ -268,7 +268,7 @@ public class ExperienceManager : MonoBehaviour
         Debug.Log($"Impact Angle: {impactAngle}");
 
         Quaternion currentRotation = convergenceLine.transform.rotation;
-        convergenceLine.transform.localRotation = Quaternion.Euler(impactAngle*-1, 0, 0);
+        convergenceLine.transform.localRotation = Quaternion.Euler(impactAngle*-1, 270, 0);
     }
 
 
