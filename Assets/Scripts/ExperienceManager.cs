@@ -8,6 +8,7 @@ using TMPro;
 using System.Linq;
 using static UnityEngine.UI.GridLayoutGroup;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class ExperienceManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class ExperienceManager : MonoBehaviour
     [SerializeField] private GameObject linePrefab;
     [SerializeField] private TextMeshProUGUI distanceTextPrefab;
     [SerializeField] private TextMeshProUGUI notice;
+    [SerializeField] public TextMeshProUGUI ARPlacementNotice;
     [SerializeField] private TextMeshProUGUI label;
 
     private bool _canPlaceSphere;
@@ -62,7 +64,13 @@ public class ExperienceManager : MonoBehaviour
         _squarePreview.SetActive(false);
         _spherePreview.SetActive(false);
 
+        StartCoroutine(HideText());
+    }
 
+    IEnumerator HideText()
+    {
+        yield return new WaitForSeconds(5f); 
+        ARPlacementNotice.gameObject.SetActive(false); 
     }
 
     private void UpdatePreviewRotation(float value)
@@ -170,19 +178,19 @@ public class ExperienceManager : MonoBehaviour
         {
             if (scaleup)
             {
-              ScaleSquare(0,0.05f * Time.deltaTime);
+              ScaleSquare(0,0.09f * Time.deltaTime);
             }
             if (scaledown)
             {
-              ScaleSquare(0, -0.05f * Time.deltaTime);
+              ScaleSquare(0, -0.09f * Time.deltaTime);
             }
             if (scaleleft)
             {
-              ScaleSquare(0.05f * Time.deltaTime,0);
+              ScaleSquare(0.09f * Time.deltaTime,0);
             }
             if (scaleright)
             {
-              ScaleSquare(-0.05f * Time.deltaTime,0);
+              ScaleSquare(-0.09f * Time.deltaTime,0);
             }
         }
     }
