@@ -13,6 +13,7 @@ TagManager:
   - line3
   - line4
   - convergence
+  - phoneicon
   layers:
   - Default
   - TransparentFX

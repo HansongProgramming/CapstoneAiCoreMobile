@@ -9,6 +9,7 @@ using System.Linq;
 using static UnityEngine.UI.GridLayoutGroup;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System.IO;
 
 public class ExperienceManager : MonoBehaviour
 {
@@ -69,8 +70,22 @@ public class ExperienceManager : MonoBehaviour
 
     IEnumerator HideText()
     {
+        GameObject imageObject = GameObject.FindGameObjectWithTag("phoneicon"); 
+        if (imageObject != null)
+        {
+            RectTransform imageRect = imageObject.GetComponent<RectTransform>();
+
+            LeanTween.moveX(imageRect, imageRect.anchoredPosition.x + 80f, 1f)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setLoopPingPong();
+        }
+        else
+        {
+            Debug.LogWarning("No GameObject found with the specified tag!");
+        }
         yield return new WaitForSeconds(5f); 
-        ARPlacementNotice.gameObject.SetActive(false); 
+        ARPlacementNotice.gameObject.SetActive(false);
+        LeanTween.cancelAll();
     }
 
     private void UpdatePreviewRotation(float value)
@@ -405,4 +420,22 @@ public class ExperienceManager : MonoBehaviour
         rotationSlider.gameObject.SetActive(_canPlaceSquare);
         _squarePreview.SetActive(_canPlaceSquare);
     }
+
+    public void CaptureScreenshot()
+    {
+        string folderPath = Path.Combine("/storage/emulated/0/Pictures/AiCore");
+
+        // Ensure the folder exists
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        string fileName = "Screenshot_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
+        string fullPath = Path.Combine(folderPath, fileName);
+
+        ScreenCapture.CaptureScreenshot(fullPath);
+        Debug.Log("Screenshot saved to: " + fullPath);
+    }
+
 }
