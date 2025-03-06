@@ -451,7 +451,7 @@ public class ExperienceManager : MonoBehaviour
 
         byte[] bytes = image.EncodeToPNG();
         string fileName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
-        string filepath = Path.Combine(Application.persistentDataPath, fileName);
+        string filepath = Path.Combine("/storage/emulated/0/Pictures/MyAppScreenshots");
         File.WriteAllBytes(filepath, bytes);
 
         Destroy(renderTexture);
