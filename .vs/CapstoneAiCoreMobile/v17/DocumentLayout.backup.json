@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{31AD00E1-62CF-8CA8-55E8-5B866DAA50A1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\experiencemanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\Assets\\Plugins\\Android\\AndroidManifest.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Plugins\\Android\\AndroidManifest.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{31AD00E1-62CF-8CA8-55E8-5B866DAA50A1}|Assembly-CSharp.csproj|D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\assets\\scripts\\points.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{31AD00E1-62CF-8CA8-55E8-5B866DAA50A1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\points.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -30,8 +34,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AndroidManifest.xml",
+              "DocumentMoniker": "D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\Assets\\Plugins\\Android\\AndroidManifest.xml",
+              "RelativeDocumentMoniker": "Assets\\Plugins\\Android\\AndroidManifest.xml",
+              "ToolTip": "D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\Assets\\Plugins\\Android\\AndroidManifest.xml",
+              "RelativeToolTip": "Assets\\Plugins\\Android\\AndroidManifest.xml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2025-03-06T05:09:46.223Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -40,14 +57,14 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\ExperienceManager.cs",
               "ToolTip": "D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\Assets\\Scripts\\ExperienceManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\ExperienceManager.cs",
-              "ViewState": "AgIAADQAAAAAAAAAAAAuwE8AAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAACMBAAAAAAAAAAAAALkBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-25T06:28:33.648Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "boxes.cs",
               "DocumentMoniker": "D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\Assets\\Scripts\\boxes.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\boxes.cs",
@@ -59,7 +76,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "MaintainSphereScale.cs",
               "DocumentMoniker": "D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\Assets\\Scripts\\MaintainSphereScale.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\MaintainSphereScale.cs",
@@ -71,7 +88,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "points.cs",
               "DocumentMoniker": "D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\Assets\\Scripts\\points.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\points.cs",
@@ -83,7 +100,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "InputHandler.cs",
               "DocumentMoniker": "D:\\Academics\\CIT7\\CapstoneAiCoreMobile\\My project\\CapstoneAiCoreMobile\\Assets\\Scripts\\Input\\InputHandler.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Input\\InputHandler.cs",

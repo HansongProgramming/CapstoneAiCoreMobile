@@ -10,6 +10,7 @@ using static UnityEngine.UI.GridLayoutGroup;
 using UnityEngine.InputSystem;
 using System.Collections;
 using System.IO;
+using System;
 
 public class ExperienceManager : MonoBehaviour
 {
@@ -64,6 +65,7 @@ public class ExperienceManager : MonoBehaviour
         _squarePreview = Instantiate(squarePrefab);
         _squarePreview.SetActive(false);
         _spherePreview.SetActive(false);
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
         StartCoroutine(HideText());
     }
@@ -423,19 +425,37 @@ public class ExperienceManager : MonoBehaviour
 
     public void CaptureScreenshot()
     {
-        string folderPath = Path.Combine("/storage/emulated/0/Pictures/AiCore");
+        StartCoroutine(TakeScreenshotAndSave());
+    }
 
-        // Ensure the folder exists
-        if (!Directory.Exists(folderPath))
-        {
-            Directory.CreateDirectory(folderPath);
-        }
+    private IEnumerator TakeScreenshotAndSave()
+    {
+        yield return new WaitForEndOfFrame();
+        Camera camera = Camera.main;
+        int width = Screen.width;
+        int height = Screen.height;
+        RenderTexture renderTexture = new RenderTexture(width, height, 32);
+        camera.targetTexture = renderTexture;
 
-        string fileName = "Screenshot_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".png";
-        string fullPath = Path.Combine(folderPath, fileName);
+        var currentRT = RenderTexture.active;
+        RenderTexture.active = renderTexture;
 
-        ScreenCapture.CaptureScreenshot(fullPath);
-        Debug.Log("Screenshot saved to: " + fullPath);
+        camera.Render();
+
+        Texture2D image = new Texture2D(width, height);
+        image.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        image.Apply();
+
+        camera.targetTexture = null;
+        RenderTexture.active = currentRT;
+
+        byte[] bytes = image.EncodeToPNG();
+        string fileName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+        string filepath = Path.Combine(Application.persistentDataPath, fileName);
+        File.WriteAllBytes(filepath, bytes);
+
+        Destroy(renderTexture);
+        Destroy(image);
     }
 
 }
