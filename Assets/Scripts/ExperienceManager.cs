@@ -102,11 +102,12 @@ public class ExperienceManager : MonoBehaviour
 
     private void SphereListener()
     {
+        Handheld.Vibrate();
         InputHandler.OnTap += SpawnSphere;
     }
-
     private void SquareListener()
     {
+        Handheld.Vibrate();
         InputHandler.OnTap -= SpawnSquare; 
         InputHandler.OnTap += SpawnSquare;
     }
@@ -210,19 +211,8 @@ public class ExperienceManager : MonoBehaviour
 
             _spherePreview.transform.position = _detectedPosition;
             _spherePreview.transform.rotation = _detectedQuaternion;
+            _squarePreview.transform.rotation = _detectedQuaternion;
 
-            if (Mathf.Abs(surfaceNormal.y) > 0.7f)
-            {
-                cameraForward.y = 0;
-                cameraForward.Normalize();
-
-                Quaternion lookRotation = Quaternion.LookRotation(cameraForward);
-                _squarePreview.transform.rotation = lookRotation;
-            }
-            else
-            {
-                _squarePreview.transform.rotation = _detectedQuaternion;
-            }
 
             Vector3 previewEulerAngles = _squarePreview.transform.rotation.eulerAngles;
 
